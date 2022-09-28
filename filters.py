@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,52 +71,92 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """REPR string representation of the filter object."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 class DateFilter(AttributeFilter):
-    """Sub class of AttributeFilter for filtering based on date"""
+    """Sub class of AttributeFilter for filtering based on date."""
+
     def __init__(self, op, value):
+        """
+        Construct a new DateFilter.
+
+        This just initializes the base AtributeFilter class
+        """
         super().__init__(op, value)
+
     @classmethod
-    def get(self,approach):
+    def get(self, approach):
+        """Get the time attribute from the CloseApproach object."""
         return approach.time.date()
 
 class DistanceFilter(AttributeFilter):
-    """Sub class of AttributeFilter for filtering based on distance"""
+    """Sub class of AttributeFilter for filtering based on distance."""
+
     def __init__(self, op, value):
+        """
+        Construct a new DistanceFilter.
+
+        This just initializes the base AtributeFilter class
+        """
         super().__init__(op, value)
+
     @classmethod
-    def get(self,approach):
+    def get(self, approach):
+        """Get the distance attribute from the CloseApproach object."""
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
-    """Sub class of AttributeFilter for filtering based on velocity"""
+    """Sub class of AttributeFilter for filtering based on velocity."""
+
     def __init__(self, op, value):
+        """
+        Construct a new VelocityFilter.
+
+        This just initializes the base AtributeFilter class
+        """
         super().__init__(op, value)
 
     @classmethod
-    def get(self,approach):
+    def get(self, approach):
+        """Get the velocity attribute from the CloseApproach object."""
         return approach.velocity
 
+
 class DiameterFilter(AttributeFilter):
-    """Sub class of AttributeFilter for filtering based on diameter"""
+    """Sub class of AttributeFilter for filtering based on diameter."""
+
     def __init__(self, op, value):
+        """
+        Construct a new DiameterFilter.
+
+        This just initializes the base AtributeFilter class
+        """
         super().__init__(op, value)
+
     @classmethod
-    def get(self,approach):
+    def get(self, approach):
+        """Get the hazardous attribute from the CloseApproach object."""
         return approach.neo.diameter
 
+
 class HazardousFilter(AttributeFilter):
-    """Sub class of AttributeFilter for filtering based on hazardous"""
+    """Sub class of AttributeFilter for filtering based on hazardous."""
+
     def __init__(self, op, value):
+        """
+        Construct a new HazardousFilter.
+
+        This just initializes the base AtributeFilter class
+        """
         super().__init__(op, value)
+
     @classmethod
-    def get(self,approach):
+    def get(self, approach):
+        """Get the hazardous attribute from the CloseApproach object."""
         return approach.neo.hazardous
-
-
 
 def create_filters(
         date=None, start_date=None, end_date=None,
@@ -153,34 +194,34 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    filters=[]
+    filters = []
     if date:
-        filters.append(DateFilter(operator.eq,date))
+        filters.append(DateFilter(operator.eq, date))
     if start_date:
-        filters.append(DateFilter(operator.ge,start_date))
+        filters.append(DateFilter(operator.ge, start_date))
     if end_date:
-        filters.append(DateFilter(operator.le,end_date))
+        filters.append(DateFilter(operator.le, end_date))
 
     if distance_min:
-        filters.append(DistanceFilter(operator.ge,distance_min))
+        filters.append(DistanceFilter(operator.ge, distance_min))
     if distance_max:
-        filters.append(DistanceFilter(operator.le,distance_max)) 
+        filters.append(DistanceFilter(operator.le, distance_max))
 
     if velocity_min:
-        filters.append(VelocityFilter(operator.ge,velocity_min))
+        filters.append(VelocityFilter(operator.ge, velocity_min))
     if velocity_max:
-        filters.append(VelocityFilter(operator.le,velocity_max))
-    
+        filters.append(VelocityFilter(operator.le, velocity_max))
+
     if diameter_min:
-        filters.append(DiameterFilter(operator.ge,diameter_min))
+        filters.append(DiameterFilter(operator.ge, diameter_min))
     if diameter_max:
-        filters.append(DiameterFilter(operator.le,diameter_max))
-    
+        filters.append(DiameterFilter(operator.le, diameter_max))
+
     if hazardous is True:
-        filters.append(HazardousFilter(operator.eq,True))
+        filters.append(HazardousFilter(operator.eq, True))
     elif hazardous is False:
-        filters.append(HazardousFilter(operator.eq,False))
-    
+        filters.append(HazardousFilter(operator.eq, False))
+
     return filters
 
 
@@ -194,7 +235,7 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     if n:
-        elements = itertools.islice(iterator,n)
+        elements = itertools.islice(iterator, n)
     else:
         elements = list(iterator)
     return elements
